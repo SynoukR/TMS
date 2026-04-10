@@ -1,0 +1,54 @@
+<div class="app-shell">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <span class="navbar-logo">TMS</span>
+    </div>
+
+    <nav class="navbar-center">
+      @for (item of navItems; track item.key) {
+        <button
+          class="nav-link"
+          [class.active]="activeSection === item.key"
+          (click)="setSection(item.key)">
+          {{ item.label }}
+        </button>
+      }
+    </nav>
+
+    <div class="navbar-right">
+      <button class="btn-logout" (click)="logout()">
+        Déconnexion
+      </button>
+    </div>
+  </header>
+
+  <div class="main-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section-title">{{ activeSection | titlecase }}</div>
+      <nav class="sidebar-nav">
+        @for (item of currentMenu; track item.route) {
+          <a
+            class="sidebar-item"
+            [routerLink]="item.route"
+            routerLinkActive="active">
+            <span class="sidebar-icon">{{ item.icon }}</span>
+            <span class="sidebar-label">{{ item.label }}</span>
+          </a>
+        }
+        @if (currentMenu.length === 0) {
+          <p class="sidebar-empty">Aucun menu disponible</p>
+        }
+      </nav>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <router-outlet />
+    </main>
+
+  </div>
+</div>
