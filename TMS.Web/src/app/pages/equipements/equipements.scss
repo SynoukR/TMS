@@ -1,0 +1,320 @@
+.equipements {
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* ── EN-TÊTE ── */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── BOUTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 8px;
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  white-space: nowrap;
+
+  &-primary {
+    background: var(--orange);
+    color: white;
+    &:hover {
+      background: var(--orange-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 109, 0, 0.35);
+    }
+  }
+
+  &-secondary {
+    background: var(--blue-light);
+    color: var(--blue-primary);
+    &:hover {
+      background: #cce0f5;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+.btn-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* ── INDICATEURS ── */
+.indicators {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  box-shadow: var(--shadow-sm);
+
+  &-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+
+  &-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  &.online .indicator-dot { background: #4caf50; }
+  &.offline .indicator-dot { background: #f44336; }
+  &.maintenance .indicator-dot { background: #ff9800; }
+}
+
+/* ── TABLEAU ── */
+.table-container {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  thead tr {
+    background: var(--blue-light);
+    border-bottom: 2px solid var(--border);
+  }
+
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #f0f6ff;
+    transition: background var(--transition-fast);
+
+    &:last-child { border-bottom: none; }
+
+    &:hover {
+      background: #f8fbff;
+    }
+  }
+
+  td {
+    padding: 13px 16px;
+    color: var(--text-dark);
+    vertical-align: middle;
+  }
+}
+
+.cell-name {
+  font-weight: 600;
+}
+
+.cell-mono {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.cell-muted {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ── BADGES STATUT ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  &.online     { background: #e8f5e9; color: #2e7d32; }
+  &.offline    { background: #fce4ec; color: #c62828; }
+  &.maintenance { background: #fff3e0; color: #e65100; }
+  &.unknown    { background: #f5f5f5; color: #757575; }
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+}
+
+/* ── BOUTON ACTION ── */
+.btn-action {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--blue-primary);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: white;
+    transform: translateX(2px);
+  }
+}
+
+/* ── ÉTATS VIDES / CHARGEMENT ── */
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  color: var(--text-muted);
+  font-size: 15px;
+  gap: 12px;
+
+  &.error { color: #c62828; }
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--blue-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── PAGINATION ── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: #fafcff;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.page-btn {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text-dark);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover:not(:disabled) {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: white;
+  }
+
+  &.active {
+    background: var(--blue-primary);
+    border-color: var(--blue-primary);
+    color: white;
+    font-weight: 700;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .table th:nth-child(4),
+  .table td:nth-child(4),
+  .table th:nth-child(7),
+  .table td:nth-child(7) { display: none; }
+}
+
+@media (max-width: 600px) {
+  .page-header { flex-direction: column; }
+  .table th:nth-child(3),
+  .table td:nth-child(3) { display: none; }
+}

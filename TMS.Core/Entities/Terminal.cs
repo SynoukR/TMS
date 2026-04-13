@@ -14,5 +14,12 @@ public class Terminal
     public DateTime? LastSeen { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    // Un terminal peut être affecté à un site actif ou être en stock spare dans une warehouse
+    public int? SiteId { get; set; }
+    public Site? Site { get; set; }
+    public int? WarehouseId { get; set; }
+    public Warehouse? Warehouse { get; set; }
+    public EquipmentStatus EquipmentStatus { get; set; } = EquipmentStatus.Available;
+
     public ICollection<Command> Commands { get; set; } = new List<Command>();
 }

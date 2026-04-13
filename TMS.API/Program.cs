@@ -5,7 +5,11 @@ using TMS.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    // Évite les erreurs de sérialisation JSON sur les graphes d'objets avec des cycles
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddOpenApi();
 
 // PostgreSQL / EF Core
@@ -15,6 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Repositories
 builder.Services.AddScoped<ITerminalRepository, TerminalRepository>();
 builder.Services.AddScoped<ICommandRepository, CommandRepository>();
+builder.Services.AddScoped<ISiteRepository, SiteRepository>();
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
 // CORS pour Angular
 builder.Services.AddCors(options =>
@@ -29,6 +35,14 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Seed de données de démo si la base est vide
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+    DbSeeder.Seed(db);
+}
 
 if (app.Environment.IsDevelopment())
 {

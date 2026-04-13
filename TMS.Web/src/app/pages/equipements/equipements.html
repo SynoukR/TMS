@@ -1,0 +1,115 @@
+<div class="equipements">
+
+  <!-- EN-TÊTE -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-title">Équipements</h1>
+      <p class="page-subtitle">Gestion des bornes et terminaux du parc</p>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn btn-secondary" (click)="showOnMap()">
+        <span class="btn-icon">🗺️</span> Carte
+      </button>
+      <button class="btn btn-primary" (click)="createNew()">
+        <span class="btn-icon">＋</span> Nouvel équipement
+      </button>
+    </div>
+  </div>
+
+  <!-- INDICATEURS -->
+  <div class="indicators">
+    <div class="indicator">
+      <span class="indicator-value">{{ totalCount() }}</span>
+      <span class="indicator-label">Total</span>
+    </div>
+    <div class="indicator online">
+      <span class="indicator-dot"></span>
+      <span class="indicator-value">{{ onlineCount() }}</span>
+      <span class="indicator-label">En ligne</span>
+    </div>
+    <div class="indicator offline">
+      <span class="indicator-dot"></span>
+      <span class="indicator-value">{{ offlineCount() }}</span>
+      <span class="indicator-label">Hors ligne</span>
+    </div>
+    <div class="indicator maintenance">
+      <span class="indicator-dot"></span>
+      <span class="indicator-value">{{ maintenanceCount() }}</span>
+      <span class="indicator-label">Maintenance</span>
+    </div>
+  </div>
+
+  <!-- TABLEAU -->
+  <div class="table-container">
+
+    @if (loading()) {
+      <div class="state-message">
+        <span class="spinner"></span>
+        Chargement des équipements…
+      </div>
+    } @else if (error()) {
+      <div class="state-message error">{{ error() }}</div>
+    } @else if (terminals().length === 0) {
+      <div class="state-message">
+        Aucun équipement enregistré.
+        <button class="btn btn-primary" style="margin-top: 12px" (click)="createNew()">Créer le premier</button>
+      </div>
+    } @else {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>N° de série</th>
+            <th>Modèle</th>
+            <th>Adresse IP</th>
+            <th>Localisation</th>
+            <th>Statut</th>
+            <th>Dernière connexion</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (terminal of pagedTerminals(); track terminal.id) {
+            <tr>
+              <td class="cell-name">{{ terminal.name }}</td>
+              <td class="cell-mono">{{ terminal.serialNumber }}</td>
+              <td>{{ terminal.model || '—' }}</td>
+              <td class="cell-mono">{{ terminal.ipAddress || '—' }}</td>
+              <td>{{ terminal.location || '—' }}</td>
+              <td>
+                <span class="badge" [ngClass]="statusClass(terminal.status)">
+                  {{ statusLabel(terminal.status) }}
+                </span>
+              </td>
+              <td class="cell-muted">{{ formatDate(terminal.lastSeen) }}</td>
+              <td>
+                <button class="btn-action" (click)="viewDetail(terminal)" title="Voir le détail">
+                  Détail →
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <!-- PAGINATION -->
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <span class="pagination-info">
+            {{ (currentPage() - 1) * 20 + 1 }}–{{ currentPage() * 20 > totalCount() ? totalCount() : currentPage() * 20 }} sur {{ totalCount() }}
+          </span>
+          <div class="pagination-controls">
+            <button class="page-btn" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">‹</button>
+            @for (page of pages(); track page) {
+              <button class="page-btn" [class.active]="page === currentPage()" (click)="goToPage(page)">
+                {{ page }}
+              </button>
+            }
+            <button class="page-btn" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">›</button>
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+</div>

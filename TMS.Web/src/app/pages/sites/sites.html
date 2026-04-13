@@ -1,0 +1,136 @@
+<div class="sites">
+
+  <!-- EN-TÊTE -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-title">Sites & Warehouses</h1>
+      <p class="page-subtitle">Organisation géographique du parc d'équipements</p>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn btn-secondary">
+        <span class="btn-icon">＋</span> Nouvelle Warehouse
+      </button>
+      <button class="btn btn-primary">
+        <span class="btn-icon">＋</span> Nouveau Site
+      </button>
+    </div>
+  </div>
+
+  <!-- INDICATEURS -->
+  <div class="indicators">
+    <div class="indicator">
+      <span class="indicator-value">{{ warehouseCount() }}</span>
+      <span class="indicator-label">Warehouses</span>
+    </div>
+    <div class="indicator">
+      <span class="indicator-value">{{ siteCount() }}</span>
+      <span class="indicator-label">Total Sites</span>
+    </div>
+    <div class="indicator active">
+      <span class="indicator-dot"></span>
+      <span class="indicator-value">{{ activeSiteCount() }}</span>
+      <span class="indicator-label">Sites actifs</span>
+    </div>
+    <div class="indicator inactive">
+      <span class="indicator-dot"></span>
+      <span class="indicator-value">{{ inactiveSiteCount() }}</span>
+      <span class="indicator-label">Sites inactifs</span>
+    </div>
+  </div>
+
+  <!-- LISTE DES WAREHOUSES -->
+  @if (loading()) {
+    <div class="state-message">
+      <span class="spinner"></span>
+      Chargement…
+    </div>
+  } @else if (error()) {
+    <div class="state-message error">{{ error() }}</div>
+  } @else if (warehouses().length === 0) {
+    <div class="state-message">
+      Aucune warehouse enregistrée.
+    </div>
+  } @else {
+    <div class="warehouses-list">
+      @for (w of warehouses(); track w.id) {
+        <div class="warehouse-card">
+
+          <!-- EN-TÊTE CLIQUABLE -->
+          <div
+            class="warehouse-card-header"
+            [class.expanded]="isExpanded(w.id)"
+            (click)="toggleWarehouse(w.id)"
+            role="button"
+            [attr.aria-expanded]="isExpanded(w.id)"
+          >
+            <div class="warehouse-card-left">
+              <div class="warehouse-icon">W</div>
+              <div class="warehouse-info">
+                <span class="warehouse-name">{{ w.name }}</span>
+                @if (w.address) {
+                  <span class="warehouse-address">{{ w.address }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="warehouse-card-stats">
+              <span class="stat-badge sites">{{ w.sites.length }} site{{ w.sites.length !== 1 ? 's' : '' }}</span>
+              <span class="stat-badge spare">{{ w.spareTerminals.length }} spare{{ w.spareTerminals.length !== 1 ? 's' : '' }}</span>
+            </div>
+
+            <div class="warehouse-card-actions">
+              <a
+                class="btn btn-secondary btn-sm"
+                [routerLink]="['/sites/warehouses', w.id]"
+                (click)="$event.stopPropagation()"
+              >
+                Détail →
+              </a>
+              <span class="warehouse-chevron" [class.expanded]="isExpanded(w.id)">&#8964;</span>
+            </div>
+          </div>
+
+          <!-- CORPS : liste des sites -->
+          @if (isExpanded(w.id)) {
+            <div class="warehouse-card-body">
+              @if (w.sites.length === 0) {
+                <p class="no-sites">Aucun site rattaché à cette warehouse.</p>
+              } @else {
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Adresse</th>
+                      <th>Nb équipements</th>
+                      <th>Statut</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (s of w.sites; track s.id) {
+                      <tr>
+                        <td class="cell-name">{{ s.name }}</td>
+                        <td class="cell-muted">{{ s.address || '—' }}</td>
+                        <td>{{ s.terminalCount }}</td>
+                        <td>
+                          <span class="badge" [class.active]="s.isActive" [class.inactive]="!s.isActive">
+                            {{ s.isActive ? 'Actif' : 'Inactif' }}
+                          </span>
+                        </td>
+                        <td>
+                          <a class="btn-action" [routerLink]="['/sites', s.id]">Détail →</a>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

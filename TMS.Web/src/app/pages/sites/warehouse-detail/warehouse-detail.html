@@ -1,0 +1,128 @@
+<div class="warehouse-detail">
+
+  @if (loading()) {
+    <div class="state-message">
+      <span class="spinner"></span>
+      Chargement…
+    </div>
+  } @else if (error()) {
+    <div class="state-message error">{{ error() }}</div>
+  } @else if (warehouse()) {
+
+    <!-- LIEN RETOUR -->
+    <a class="back-link" routerLink="/sites" aria-label="Retour à la liste Sites & Warehouses">
+      <span>&#8592;</span> Sites & Warehouses
+    </a>
+
+    <!-- EN-TÊTE DÉTAIL -->
+    <div class="detail-header">
+      <div class="detail-header-left">
+        <div class="detail-icon">W</div>
+        <div>
+          <h1 class="detail-title">{{ warehouse()!.name }}</h1>
+          @if (warehouse()!.address) {
+            <p class="detail-address">{{ warehouse()!.address }}</p>
+          }
+          <span class="status-badge" [class.active]="warehouse()!.isActive" [class.inactive]="!warehouse()!.isActive">
+            {{ warehouse()!.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+      </div>
+      <div class="detail-header-stats">
+        <div class="stat-block">
+          <span class="stat-value">{{ warehouse()!.sites.length }}</span>
+          <span class="stat-label">Sites</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-value">{{ warehouse()!.spareTerminals.length }}</span>
+          <span class="stat-label">Équipements spare</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-value">{{ formatDate(warehouse()!.createdAt) }}</span>
+          <span class="stat-label">Créée le</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION SITES RATTACHÉS -->
+    <div class="detail-section">
+      <div class="detail-section-header">
+        <h2 class="section-title">Sites rattachés</h2>
+        <span class="section-count">{{ warehouse()!.sites.length }}</span>
+      </div>
+
+      @if (warehouse()!.sites.length === 0) {
+        <p class="no-data">Aucun site rattaché à cette warehouse.</p>
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Adresse</th>
+              <th>Nb équipements</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of warehouse()!.sites; track s.id) {
+              <tr>
+                <td class="cell-name">{{ s.name }}</td>
+                <td class="cell-muted">{{ s.address || '—' }}</td>
+                <td>{{ s.terminalCount }}</td>
+                <td>
+                  <span class="badge" [class.active]="s.isActive" [class.inactive]="!s.isActive">
+                    {{ s.isActive ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+                <td>
+                  <a class="btn-action" [routerLink]="['/sites', s.id]">Détail →</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+
+    <!-- SECTION ÉQUIPEMENTS SPARE -->
+    <div class="detail-section">
+      <div class="detail-section-header">
+        <h2 class="section-title">Équipements spare</h2>
+        <span class="section-count">{{ warehouse()!.spareTerminals.length }}</span>
+      </div>
+
+      @if (warehouse()!.spareTerminals.length === 0) {
+        <p class="no-data">Aucun équipement en stock dans cette warehouse.</p>
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>N° de série</th>
+              <th>Modèle</th>
+              <th>État</th>
+              <th>Dernière connexion</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of warehouse()!.spareTerminals; track t.id) {
+              <tr>
+                <td class="cell-name">{{ t.name }}</td>
+                <td class="cell-mono">{{ t.serialNumber }}</td>
+                <td>{{ t.model || '—' }}</td>
+                <td>
+                  <span class="badge equipment-status" [ngClass]="equipmentStatusClass(t.equipmentStatus)">
+                    {{ equipmentStatusLabel(t.equipmentStatus) }}
+                  </span>
+                </td>
+                <td class="cell-muted">{{ formatDate(t.lastSeen) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+
+  }
+</div>

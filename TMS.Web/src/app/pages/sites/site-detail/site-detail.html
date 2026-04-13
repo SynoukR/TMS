@@ -1,0 +1,114 @@
+<div class="site-detail">
+
+  @if (loading()) {
+    <div class="state-message">
+      <span class="spinner"></span>
+      Chargement…
+    </div>
+  } @else if (error()) {
+    <div class="state-message error">{{ error() }}</div>
+  } @else if (site()) {
+
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb">
+      <a class="breadcrumb-link" routerLink="/sites">Sites & Warehouses</a>
+      <span class="breadcrumb-sep">›</span>
+      <a class="breadcrumb-link" [routerLink]="['/sites/warehouses', site()!.warehouseId]">
+        {{ site()!.warehouseName }}
+      </a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">{{ site()!.name }}</span>
+    </nav>
+
+    <!-- EN-TÊTE DÉTAIL -->
+    <div class="detail-header">
+      <div class="detail-header-left">
+        <div class="detail-icon">S</div>
+        <div>
+          <div class="detail-title-row">
+            <h1 class="detail-title">{{ site()!.name }}</h1>
+            <a class="warehouse-tag" [routerLink]="['/sites/warehouses', site()!.warehouseId]">
+              {{ site()!.warehouseName }}
+            </a>
+          </div>
+          @if (site()!.address) {
+            <p class="detail-address">{{ site()!.address }}</p>
+          }
+          <span class="status-badge" [class.active]="site()!.isActive" [class.inactive]="!site()!.isActive">
+            {{ site()!.isActive ? 'Actif' : 'Inactif' }}
+          </span>
+        </div>
+      </div>
+      <div class="detail-header-stats">
+        <div class="stat-block">
+          <span class="stat-value">{{ site()!.terminals.length }}</span>
+          <span class="stat-label">Équipements</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-value">{{ formatDate(site()!.createdAt) }}</span>
+          <span class="stat-label">Créé le</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION ÉQUIPEMENTS -->
+    <div class="detail-section">
+      <div class="detail-section-header">
+        <h2 class="section-title">Équipements du site</h2>
+        <span class="section-count">{{ site()!.terminals.length }}</span>
+      </div>
+
+      @if (site()!.terminals.length === 0) {
+        <p class="no-data">Aucun équipement affecté à ce site.</p>
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>N° de série</th>
+              <th>Modèle</th>
+              <th>Adresse IP</th>
+              <th>Statut</th>
+              <th>Dernière connexion</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of pagedTerminals(); track t.id) {
+              <tr>
+                <td class="cell-name">{{ t.name }}</td>
+                <td class="cell-mono">{{ t.serialNumber }}</td>
+                <td>{{ t.model || '—' }}</td>
+                <td class="cell-mono">{{ t.ipAddress || '—' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="statusClass(t.status)">
+                    {{ statusLabel(t.status) }}
+                  </span>
+                </td>
+                <td class="cell-muted">{{ formatDate(t.lastSeen) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <!-- PAGINATION -->
+        @if (totalPages() > 1) {
+          <div class="pagination">
+            <span class="pagination-info">
+              {{ (currentPage() - 1) * PAGE_SIZE + 1 }}–{{ currentPage() * PAGE_SIZE > site()!.terminals.length ? site()!.terminals.length : currentPage() * PAGE_SIZE }} sur {{ site()!.terminals.length }}
+            </span>
+            <div class="pagination-controls">
+              <button class="page-btn" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">&#8249;</button>
+              @for (page of pages(); track page) {
+                <button class="page-btn" [class.active]="page === currentPage()" (click)="goToPage(page)">
+                  {{ page }}
+                </button>
+              }
+              <button class="page-btn" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">&#8250;</button>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+  }
+</div>

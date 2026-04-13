@@ -1,23 +1,97 @@
-* {
+/* ── VARIABLES GLOBALES ── */
+:root {
+  --blue-primary: #2196f3;
+  --blue-dark: #1565c0;
+  --blue-light: #e3f2fd;
+  --blue-sidebar: #ffffff;
+  --orange: #ff6d00;
+  --orange-hover: #e65100;
+  --bg-app: #f5f9ff;
+  --bg-sidebar: #ffffff;
+  --text-dark: #1a2b3c;
+  --text-muted: #607d8b;
+  --border: #cce0f5;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 4px rgba(33, 150, 243, 0.08);
+  --shadow-md: 0 4px 16px rgba(33, 150, 243, 0.12);
+  --shadow-lg: 0 8px 32px rgba(33, 150, 243, 0.18);
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+}
+
+/* ── RESET ── */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f8ff;
-  color: #2c3e50;
+/* ── BASE ── */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
 }
 
-:root {
-  --blue-primary: #2196f3;
-  --blue-dark: #1565c0;
-  --blue-light: #e3f2fd;
-  --blue-sidebar: #f0f8ff;
-  --orange: #ff6d00;
-  --orange-hover: #e65100;
-  --text-dark: #1a2b3c;
-  --text-muted: #607d8b;
-  --border: #cce0f5;
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-dark);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── ACCESSIBILITÉ — focus visible ── */
+:focus-visible {
+  outline: 2px solid var(--blue-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── SCROLLBAR personnalisée ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+
+  &:hover {
+    background: #a0bdd8;
+  }
+}
+
+/* ── UTILITAIRES TYPOGRAPHIQUES ── */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-dark);
+}
+
+p {
+  line-height: 1.6;
+}
+
+a {
+  color: var(--blue-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
 }
